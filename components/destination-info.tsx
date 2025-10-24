@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { destinations, getFlightRoute, getDistance } from "@/lib/travel-data"
-import { InfoCard } from "./info-card"
+import { destinations, getFlightRoute, getDistance } from "@/lib/travel-data";
+import { InfoCard } from "./info-card";
 import {
   Utensils,
   Church,
@@ -26,32 +26,37 @@ import {
   Bus,
   Clock,
   Navigation,
-} from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CurrencyConverter } from "./currency-converter"
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CurrencyConverter } from "./currency-converter";
+import { exportTravelGuidePDF } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 interface DestinationInfoProps {
-  fromId: string
-  toId: string
+  fromId: string;
+  toId: string;
 }
 
 export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
-  const destination = destinations[toId]
-  const origin = destinations[fromId]
-  const flightRoute = getFlightRoute(fromId, toId)
-  const distance = getDistance(fromId, toId)
+  const destination = destinations[toId];
+  const origin = destinations[fromId];
+  const flightRoute = getFlightRoute(fromId, toId);
+  const distance = getDistance(fromId, toId);
 
-  if (!destination) return null
+  if (!destination) return null;
 
   const getTimeDifference = () => {
-    const originOffset = Number.parseFloat(origin.timezoneOffset.split("/")[0])
-    const destOffset = Number.parseFloat(destination.timezoneOffset.split("/")[0])
-    const diff = destOffset - originOffset
-    if (diff === 0) return "Same timezone"
-    return diff > 0 ? `+${diff} hours` : `${diff} hours`
-  }
+    const originOffset = Number.parseFloat(origin.timezoneOffset.split("/")[0]);
+    const destOffset = Number.parseFloat(
+      destination.timezoneOffset.split("/")[0]
+    );
+    const diff = destOffset - originOffset;
+    if (diff === 0) return "Same timezone";
+    return diff > 0 ? `+${diff} hours` : `${diff} hours`;
+  };
   // </CHANGE>
 
   return (
@@ -60,11 +65,24 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
       <div className="bg-card rounded-lg p-6 border">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-3xl font-bold text-balance">{destination.name}</h2>
+            <h2 className="text-3xl font-bold text-balance">
+              {destination.name}
+            </h2>
             <p className="text-muted-foreground mt-1">{destination.country}</p>
           </div>
+          <Button
+            onClick={() => exportTravelGuidePDF({ toId, fromId })}
+            variant="outline"
+            size="sm"
+            className="gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export PDF
+          </Button>
         </div>
-        <p className="text-foreground leading-relaxed">{destination.description}</p>
+        <p className="text-foreground leading-relaxed">
+          {destination.description}
+        </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
           <div className="space-y-1">
@@ -72,7 +90,9 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               <Globe className="h-4 w-4" />
               <span>Language</span>
             </div>
-            <p className="text-sm font-medium">{destination.language.join(", ")}</p>
+            <p className="text-sm font-medium">
+              {destination.language.join(", ")}
+            </p>
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -114,7 +134,9 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                 <MapPin className="h-5 w-5 text-primary" />
                 Explore {destination.name}
               </h3>
-              <p className="text-sm text-muted-foreground mt-1">Interactive map of the destination</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Interactive map of the destination
+              </p>
             </div>
             <div className="relative w-full h-[400px]">
               <iframe
@@ -137,17 +159,25 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               <InfoCard title="Flight Information" icon={Plane}>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">Distance</p>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Distance
+                    </p>
                     <p className="text-lg font-semibold">{distance.distance}</p>
                   </div>
                   <Separator />
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">Estimated Duration</p>
-                    <p className="text-lg font-semibold">{flightRoute.duration}</p>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Estimated Duration
+                    </p>
+                    <p className="text-lg font-semibold">
+                      {flightRoute.duration}
+                    </p>
                   </div>
                   <Separator />
                   <div>
-                    <p className="text-sm text-muted-foreground mb-2">Airlines</p>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Airlines
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {flightRoute.airlines.map((airline, idx) => (
                         <Badge key={idx} variant="secondary">
@@ -164,17 +194,25 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
             <InfoCard title="Climate & Weather" icon={CloudRain}>
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Climate Type</p>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    Climate Type
+                  </p>
                   <p className="font-semibold">{destination.climate.type}</p>
                 </div>
                 <Separator />
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Average Temperature</p>
-                  <p className="font-semibold">{destination.climate.averageTemp}</p>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    Average Temperature
+                  </p>
+                  <p className="font-semibold">
+                    {destination.climate.averageTemp}
+                  </p>
                 </div>
                 <Separator />
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Rainy Seasons</p>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    Rainy Seasons
+                  </p>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {destination.climate.rainySeasons.map((season, idx) => (
                       <Badge key={idx} variant="outline">
@@ -183,7 +221,9 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                     ))}
                   </div>
                 </div>
-                <p className="text-sm pt-2">{destination.climate.description}</p>
+                <p className="text-sm pt-2">
+                  {destination.climate.description}
+                </p>
               </div>
             </InfoCard>
           </div>
@@ -192,29 +232,46 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
           <InfoCard title="Best Time to Visit" icon={Sun}>
             <div className="space-y-3">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Peak Season</p>
-                <p className="font-semibold">{destination.bestTimeToVisit.peak}</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Peak Season
+                </p>
+                <p className="font-semibold">
+                  {destination.bestTimeToVisit.peak}
+                </p>
               </div>
               <Separator />
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Off-Peak Season</p>
-                <p className="font-semibold">{destination.bestTimeToVisit.offPeak}</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Off-Peak Season
+                </p>
+                <p className="font-semibold">
+                  {destination.bestTimeToVisit.offPeak}
+                </p>
               </div>
               <Separator />
               <div className="bg-muted p-3 rounded-md">
                 <p className="text-sm font-medium">Recommendation:</p>
-                <p className="text-sm mt-1">{destination.bestTimeToVisit.recommendation}</p>
+                <p className="text-sm mt-1">
+                  {destination.bestTimeToVisit.recommendation}
+                </p>
               </div>
             </div>
           </InfoCard>
 
           {/* Currency Converter */}
-          <CurrencyConverter fromCurrency={origin.currencyCode} toCurrency={destination.currencyCode} />
+          <CurrencyConverter
+            fromCurrency={origin.currencyCode}
+            toCurrency={destination.currencyCode}
+          />
         </TabsContent>
 
         <TabsContent value="places" className="space-y-6 mt-6">
           {/* Restaurants */}
-          <InfoCard title="Restaurants" description="Local dining experiences" icon={Utensils}>
+          <InfoCard
+            title="Restaurants"
+            description="Local dining experiences"
+            icon={Utensils}
+          >
             <div className="space-y-4">
               {destination.restaurants.map((restaurant, idx) => (
                 <div key={idx} className="space-y-1">
@@ -222,16 +279,24 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                     <h4 className="font-semibold">{restaurant.name}</h4>
                     <Badge variant="outline">{restaurant.priceRange}</Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">{restaurant.cuisine}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {restaurant.cuisine}
+                  </p>
                   <p className="text-sm">{restaurant.description}</p>
-                  {idx < destination.restaurants.length - 1 && <Separator className="mt-4" />}
+                  {idx < destination.restaurants.length - 1 && (
+                    <Separator className="mt-4" />
+                  )}
                 </div>
               ))}
             </div>
           </InfoCard>
 
           {/* Attractions */}
-          <InfoCard title="Attractions" description="Must-see places" icon={MapPin}>
+          <InfoCard
+            title="Attractions"
+            description="Must-see places"
+            icon={MapPin}
+          >
             <div className="space-y-4">
               {destination.attractions.map((attraction, idx) => (
                 <div key={idx} className="space-y-1">
@@ -240,7 +305,9 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                     <Badge variant="secondary">{attraction.type}</Badge>
                   </div>
                   <p className="text-sm">{attraction.description}</p>
-                  {idx < destination.attractions.length - 1 && <Separator className="mt-4" />}
+                  {idx < destination.attractions.length - 1 && (
+                    <Separator className="mt-4" />
+                  )}
                 </div>
               ))}
             </div>
@@ -255,9 +322,13 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                   {destination.churches.map((church, idx) => (
                     <div key={idx} className="space-y-1">
                       <h4 className="font-semibold text-sm">{church.name}</h4>
-                      <p className="text-xs text-muted-foreground">{church.address}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {church.address}
+                      </p>
                       <p className="text-sm">{church.description}</p>
-                      {idx < destination.churches.length - 1 && <Separator className="mt-3" />}
+                      {idx < destination.churches.length - 1 && (
+                        <Separator className="mt-3" />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -271,9 +342,13 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                   {destination.mosques.map((mosque, idx) => (
                     <div key={idx} className="space-y-1">
                       <h4 className="font-semibold text-sm">{mosque.name}</h4>
-                      <p className="text-xs text-muted-foreground">{mosque.address}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {mosque.address}
+                      </p>
                       <p className="text-sm">{mosque.description}</p>
-                      {idx < destination.mosques.length - 1 && <Separator className="mt-3" />}
+                      {idx < destination.mosques.length - 1 && (
+                        <Separator className="mt-3" />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -282,7 +357,11 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
           </div>
 
           {/* Events */}
-          <InfoCard title="Local Events" description="Annual celebrations" icon={PartyPopper}>
+          <InfoCard
+            title="Local Events"
+            description="Annual celebrations"
+            icon={PartyPopper}
+          >
             <div className="space-y-4">
               {destination.events.map((event, idx) => (
                 <div key={idx} className="space-y-1">
@@ -291,24 +370,34 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                     <Badge variant="outline">{event.date}</Badge>
                   </div>
                   <p className="text-sm">{event.description}</p>
-                  {idx < destination.events.length - 1 && <Separator className="mt-4" />}
+                  {idx < destination.events.length - 1 && (
+                    <Separator className="mt-4" />
+                  )}
                 </div>
               ))}
             </div>
           </InfoCard>
 
           {/* Hotels */}
-          <InfoCard title="Hotels" description="Accommodation options" icon={Hotel}>
+          <InfoCard
+            title="Hotels"
+            description="Accommodation options"
+            icon={Hotel}
+          >
             <div className="space-y-4">
               {destination.hotels.map((hotel, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex items-start justify-between">
                     <h4 className="font-semibold">{hotel.name}</h4>
-                    <Badge variant="secondary">{"⭐".repeat(hotel.stars)}</Badge>
+                    <Badge variant="secondary">
+                      {"⭐".repeat(hotel.stars)}
+                    </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">{hotel.area}</p>
                   <p className="text-sm">{hotel.description}</p>
-                  {idx < destination.hotels.length - 1 && <Separator className="mt-4" />}
+                  {idx < destination.hotels.length - 1 && (
+                    <Separator className="mt-4" />
+                  )}
                 </div>
               ))}
             </div>
@@ -319,15 +408,27 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
           {/* Visa Information */}
           <InfoCard title="Visa Requirements" icon={FileText}>
             <div className="space-y-3">
-              {Object.entries(destination.visaInfo.required).map(([country, requirement], idx) => (
-                <div key={idx}>
-                  <div className="flex items-start justify-between">
-                    <p className="font-semibold text-sm">{country}</p>
-                    <Badge variant={requirement.includes("Visa-free") ? "default" : "secondary"}>{requirement}</Badge>
+              {Object.entries(destination.visaInfo.required).map(
+                ([country, requirement], idx) => (
+                  <div key={idx}>
+                    <div className="flex items-start justify-between">
+                      <p className="font-semibold text-sm">{country}</p>
+                      <Badge
+                        variant={
+                          requirement.includes("Visa-free")
+                            ? "default"
+                            : "secondary"
+                        }
+                      >
+                        {requirement}
+                      </Badge>
+                    </div>
+                    {idx <
+                      Object.entries(destination.visaInfo.required).length -
+                        1 && <Separator className="mt-3" />}
                   </div>
-                  {idx < Object.entries(destination.visaInfo.required).length - 1 && <Separator className="mt-3" />}
-                </div>
-              ))}
+                )
+              )}
               <div className="bg-muted p-3 rounded-md mt-4">
                 <p className="text-sm">{destination.visaInfo.notes}</p>
               </div>
@@ -343,15 +444,21 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Coffee</p>
-                <p className="font-semibold">{destination.costOfLiving.coffee}</p>
+                <p className="font-semibold">
+                  {destination.costOfLiving.coffee}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Transport</p>
-                <p className="font-semibold">{destination.costOfLiving.transport}</p>
+                <p className="font-semibold">
+                  {destination.costOfLiving.transport}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Hotel</p>
-                <p className="font-semibold">{destination.costOfLiving.hotel}</p>
+                <p className="font-semibold">
+                  {destination.costOfLiving.hotel}
+                </p>
               </div>
             </div>
           </InfoCard>
@@ -362,21 +469,31 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Police</p>
-                  <p className="font-semibold text-lg">{destination.emergencyContacts.police}</p>
+                  <p className="font-semibold text-lg">
+                    {destination.emergencyContacts.police}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Ambulance</p>
-                  <p className="font-semibold text-lg">{destination.emergencyContacts.ambulance}</p>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    Ambulance
+                  </p>
+                  <p className="font-semibold text-lg">
+                    {destination.emergencyContacts.ambulance}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Fire</p>
-                  <p className="font-semibold text-lg">{destination.emergencyContacts.fire}</p>
+                  <p className="font-semibold text-lg">
+                    {destination.emergencyContacts.fire}
+                  </p>
                 </div>
               </div>
               <Separator />
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Embassy</p>
-                <p className="font-semibold">{destination.emergencyContacts.embassy}</p>
+                <p className="font-semibold">
+                  {destination.emergencyContacts.embassy}
+                </p>
               </div>
             </div>
           </InfoCard>
@@ -385,7 +502,9 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
           <InfoCard title="Health & Safety" icon={Heart}>
             <div className="space-y-3">
               <div>
-                <p className="text-sm font-semibold mb-2">Required/Recommended Vaccinations</p>
+                <p className="text-sm font-semibold mb-2">
+                  Required/Recommended Vaccinations
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {destination.healthInfo.vaccinations.map((vax, idx) => (
                     <Badge key={idx} variant="outline">
@@ -413,12 +532,18 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
           <InfoCard title="Getting Around" icon={Bus}>
             <div className="space-y-3">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Metro/Subway</p>
-                <p className="font-semibold">{destination.transportation.metro}</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Metro/Subway
+                </p>
+                <p className="font-semibold">
+                  {destination.transportation.metro}
+                </p>
               </div>
               <Separator />
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Ride-Hailing Apps</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Ride-Hailing Apps
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {destination.transportation.taxi.map((app, idx) => (
                     <Badge key={idx} variant="secondary">
@@ -429,7 +554,9 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               </div>
               <Separator />
               <div>
-                <p className="text-sm font-semibold mb-2">Transportation Tips</p>
+                <p className="text-sm font-semibold mb-2">
+                  Transportation Tips
+                </p>
                 <ul className="space-y-2">
                   {destination.transportation.tips.map((tip, idx) => (
                     <li key={idx} className="text-sm flex items-start gap-2">
@@ -447,7 +574,7 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {destination.packingList.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-2 text-sm">
-                  <div className="h-4 w-4 rounded border border-primary flex-shrink-0" />
+                  <div className="h-4 w-4 rounded border border-primary shrink-0" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -462,8 +589,12 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                 {destination.banks.map((bank, idx) => (
                   <div key={idx} className="space-y-1">
                     <h4 className="font-semibold text-sm">{bank.name}</h4>
-                    <p className="text-sm text-muted-foreground">{bank.branches}</p>
-                    {idx < destination.banks.length - 1 && <Separator className="mt-3" />}
+                    <p className="text-sm text-muted-foreground">
+                      {bank.branches}
+                    </p>
+                    {idx < destination.banks.length - 1 && (
+                      <Separator className="mt-3" />
+                    )}
                   </div>
                 ))}
               </div>
@@ -493,7 +624,9 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                 <div key={idx} className="space-y-1">
                   <h4 className="font-semibold">{dish.dish}</h4>
                   <p className="text-sm">{dish.description}</p>
-                  {idx < destination.cuisine.length - 1 && <Separator className="mt-4" />}
+                  {idx < destination.cuisine.length - 1 && (
+                    <Separator className="mt-4" />
+                  )}
                 </div>
               ))}
             </div>
@@ -506,12 +639,18 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                 <div key={idx} className="space-y-1">
                   <div className="flex items-start justify-between">
                     <p className="font-semibold text-sm">{phrase.english}</p>
-                    <p className="font-semibold text-sm text-primary">{phrase.local}</p>
+                    <p className="font-semibold text-sm text-primary">
+                      {phrase.local}
+                    </p>
                   </div>
                   {phrase.pronunciation && (
-                    <p className="text-xs text-muted-foreground italic">Pronunciation: {phrase.pronunciation}</p>
+                    <p className="text-xs text-muted-foreground italic">
+                      Pronunciation: {phrase.pronunciation}
+                    </p>
                   )}
-                  {idx < destination.commonPhrases.length - 1 && <Separator className="mt-3" />}
+                  {idx < destination.commonPhrases.length - 1 && (
+                    <Separator className="mt-3" />
+                  )}
                 </div>
               ))}
             </div>
@@ -532,5 +671,5 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
       </Tabs>
       {/* </CHANGE> */}
     </div>
-  )
+  );
 }
