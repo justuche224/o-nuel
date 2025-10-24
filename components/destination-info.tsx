@@ -180,9 +180,28 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {flightRoute.airlines.map((airline, idx) => (
-                        <Badge key={idx} variant="secondary">
-                          {airline}
-                        </Badge>
+                        <a
+                          key={idx}
+                          href={flightRoute.airlineUrls?.[idx] || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={
+                            flightRoute.airlineUrls?.[idx]
+                              ? "hover:underline"
+                              : ""
+                          }
+                        >
+                          <Badge
+                            variant="secondary"
+                            className={
+                              flightRoute.airlineUrls?.[idx]
+                                ? "cursor-pointer"
+                                : ""
+                            }
+                          >
+                            {airline}
+                          </Badge>
+                        </a>
                       ))}
                     </div>
                   </div>
@@ -276,7 +295,20 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               {destination.restaurants.map((restaurant, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex items-start justify-between">
-                    <h4 className="font-semibold">{restaurant.name}</h4>
+                    <h4 className="font-semibold">
+                      {restaurant.url ? (
+                        <a
+                          href={restaurant.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          {restaurant.name}
+                        </a>
+                      ) : (
+                        restaurant.name
+                      )}
+                    </h4>
                     <Badge variant="outline">{restaurant.priceRange}</Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
@@ -301,7 +333,20 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               {destination.attractions.map((attraction, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex items-start justify-between">
-                    <h4 className="font-semibold">{attraction.name}</h4>
+                    <h4 className="font-semibold">
+                      {attraction.url ? (
+                        <a
+                          href={attraction.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          {attraction.name}
+                        </a>
+                      ) : (
+                        attraction.name
+                      )}
+                    </h4>
                     <Badge variant="secondary">{attraction.type}</Badge>
                   </div>
                   <p className="text-sm">{attraction.description}</p>
@@ -321,7 +366,20 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                 <div className="space-y-3">
                   {destination.churches.map((church, idx) => (
                     <div key={idx} className="space-y-1">
-                      <h4 className="font-semibold text-sm">{church.name}</h4>
+                      <h4 className="font-semibold text-sm">
+                        {church.url ? (
+                          <a
+                            href={church.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {church.name}
+                          </a>
+                        ) : (
+                          church.name
+                        )}
+                      </h4>
                       <p className="text-xs text-muted-foreground">
                         {church.address}
                       </p>
@@ -341,7 +399,20 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
                 <div className="space-y-3">
                   {destination.mosques.map((mosque, idx) => (
                     <div key={idx} className="space-y-1">
-                      <h4 className="font-semibold text-sm">{mosque.name}</h4>
+                      <h4 className="font-semibold text-sm">
+                        {mosque.url ? (
+                          <a
+                            href={mosque.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {mosque.name}
+                          </a>
+                        ) : (
+                          mosque.name
+                        )}
+                      </h4>
                       <p className="text-xs text-muted-foreground">
                         {mosque.address}
                       </p>
@@ -388,7 +459,20 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               {destination.hotels.map((hotel, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex items-start justify-between">
-                    <h4 className="font-semibold">{hotel.name}</h4>
+                    <h4 className="font-semibold">
+                      {hotel.url ? (
+                        <a
+                          href={hotel.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          {hotel.name}
+                        </a>
+                      ) : (
+                        hotel.name
+                      )}
+                    </h4>
                     <Badge variant="secondary">
                       {"⭐".repeat(hotel.stars)}
                     </Badge>
@@ -588,7 +672,20 @@ export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
               <div className="space-y-3">
                 {destination.banks.map((bank, idx) => (
                   <div key={idx} className="space-y-1">
-                    <h4 className="font-semibold text-sm">{bank.name}</h4>
+                    <h4 className="font-semibold text-sm">
+                      {bank.url ? (
+                        <a
+                          href={bank.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          {bank.name}
+                        </a>
+                      ) : (
+                        bank.name
+                      )}
+                    </h4>
                     <p className="text-sm text-muted-foreground">
                       {bank.branches}
                     </p>
