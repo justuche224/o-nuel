@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { DestinationSelector } from "@/components/destination-selector"
-import { DestinationInfo } from "@/components/destination-info"
-import { Button } from "@/components/ui/button"
-import { Plane } from "lucide-react"
+import { useState } from "react";
+import { DestinationSelector } from "@/components/destination-selector";
+import { DestinationInfo } from "@/components/destination-info";
+import { Button } from "@/components/ui/button";
+import { Plane } from "lucide-react";
 
 export default function Home() {
-  const [fromLocation, setFromLocation] = useState("")
-  const [toLocation, setToLocation] = useState("")
-  const [showResults, setShowResults] = useState(false)
+  const [fromLocation, setFromLocation] = useState("");
+  const [toLocation, setToLocation] = useState("");
+  const [showResults, setShowResults] = useState(false);
 
   const handleSearch = () => {
     if (fromLocation && toLocation && fromLocation !== toLocation) {
-      setShowResults(true)
+      setShowResults(true);
     }
-  }
+  };
 
   const handleReset = () => {
-    setFromLocation("")
-    setToLocation("")
-    setShowResults(false)
-  }
+    setFromLocation("");
+    setToLocation("");
+    setShowResults(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -39,14 +39,22 @@ export default function Home() {
         {/* Hero Content */}
         <div className="relative z-10 w-full max-w-4xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 text-balance">Explore the World</h1>
-            <p className="text-xl text-white/90 text-balance">Your personalized travel guide to amazing destinations</p>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 text-balance">
+              Explore the World
+            </h1>
+            <p className="text-xl text-white/90 text-balance">
+              Your personalized travel guide to amazing destinations
+            </p>
           </div>
 
           {/* Selection Card */}
           <div className="bg-white rounded-xl p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-center mb-2 text-gray-900">Plan Your Journey</h2>
-            <p className="text-center text-gray-600 mb-8">Select your current location and dream destination</p>
+            <h2 className="text-2xl font-bold text-center mb-2 text-gray-900">
+              Plan Your Journey
+            </h2>
+            <p className="text-center text-gray-600 mb-8">
+              Select your current location and dream destination
+            </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <DestinationSelector
@@ -67,7 +75,9 @@ export default function Home() {
 
             <Button
               onClick={handleSearch}
-              disabled={!fromLocation || !toLocation || fromLocation === toLocation}
+              disabled={
+                !fromLocation || !toLocation || fromLocation === toLocation
+              }
               className="w-full h-12 text-base bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white border-0"
             >
               <Plane className="mr-2 h-5 w-5" />
@@ -75,7 +85,11 @@ export default function Home() {
             </Button>
 
             {showResults && (
-              <Button onClick={handleReset} variant="outline" className="w-full mt-3 bg-transparent">
+              <Button
+                onClick={handleReset}
+                variant="outline"
+                className="w-full mt-3 bg-transparent"
+              >
                 Reset Search
               </Button>
             )}
@@ -102,5 +116,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

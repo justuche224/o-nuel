@@ -1,6 +1,5 @@
 "use client";
 
-import { destinations, getFlightRoute, getDistance } from "@/lib/travel-data";
 import { InfoCard } from "./info-card";
 import {
   Utensils,
@@ -26,6 +25,7 @@ import {
   Bus,
   Clock,
   Navigation,
+  Loader2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -34,6 +34,11 @@ import { CurrencyConverter } from "./currency-converter";
 import { exportTravelGuidePDF } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import {
+  useDestination,
+  useFlightRoute,
+  useDistance,
+} from "@/hooks/use-destinations";
 
 interface DestinationInfoProps {
   fromId: string;
@@ -41,12 +46,38 @@ interface DestinationInfoProps {
 }
 
 export function DestinationInfo({ fromId, toId }: DestinationInfoProps) {
-  const destination = destinations[toId];
-  const origin = destinations[fromId];
-  const flightRoute = getFlightRoute(fromId, toId);
-  const distance = getDistance(fromId, toId);
+  const { data: destination, isLoading: isLoadingDestination } =
+    useDestination(toId);
+  const { data: origin, isLoading: isLoadingOrigin } = useDestination(fromId);
+  const { data: flightRoute, isLoading: isLoadingRoute } = useFlightRoute(
+    fromId,
+    toId
+  );
+  const { data: distance, isLoading: isLoadingDistance } = useDistance(
+    fromId,
+    toId
+  );
 
-  if (!destination) return null;
+  const isLoading =
+    isLoadingDestination ||
+    isLoadingOrigin ||
+    isLoadingRoute ||
+    isLoadingDistance;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-muted-foreground">
+            Loading destination information...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!destination || !origin) return null;
 
   const getTimeDifference = () => {
     const originOffset = Number.parseFloat(origin.timezoneOffset.split("/")[0]);

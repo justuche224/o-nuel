@@ -1,36 +1,82 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { exchangeRates } from "@/lib/travel-data"
-import { ArrowRightLeft } from "lucide-react"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ArrowRightLeft, Loader2 } from "lucide-react";
+import { useExchangeRates } from "@/hooks/use-destinations";
 
 interface CurrencyConverterProps {
-  fromCurrency: string
-  toCurrency: string
+  fromCurrency: string;
+  toCurrency: string;
 }
 
-export function CurrencyConverter({ fromCurrency, toCurrency }: CurrencyConverterProps) {
-  const [amount, setAmount] = useState<string>("100")
-  const [from, setFrom] = useState(fromCurrency)
-  const [to, setTo] = useState(toCurrency)
+export function CurrencyConverter({
+  fromCurrency,
+  toCurrency,
+}: CurrencyConverterProps) {
+  const [amount, setAmount] = useState<string>("100");
+  const [from, setFrom] = useState(fromCurrency);
+  const [to, setTo] = useState(toCurrency);
 
-  const currencies = Object.keys(exchangeRates)
+  const { data: exchangeRates, isLoading } = useExchangeRates();
 
-  const convertCurrency = (value: number, fromCurr: string, toCurr: string): number => {
-    const inUSD = value / exchangeRates[fromCurr]
-    return inUSD * exchangeRates[toCurr]
-  }
+  const currencies = exchangeRates ? Object.keys(exchangeRates) : [];
 
-  const numAmount = Number.parseFloat(amount) || 0
-  const converted = convertCurrency(numAmount, from, to)
+  const convertCurrency = (
+    value: number,
+    fromCurr: string,
+    toCurr: string
+  ): number => {
+    if (!exchangeRates) return 0;
+    const inUSD = value / exchangeRates[fromCurr];
+    return inUSD * exchangeRates[toCurr];
+  };
+
+  const numAmount = Number.parseFloat(amount) || 0;
+  const converted = convertCurrency(numAmount, from, to);
 
   const swapCurrencies = () => {
-    setFrom(to)
-    setTo(from)
+    setFrom(to);
+    setTo(from);
+  };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ArrowRightLeft className="h-5 w-5 text-primary" />
+            Currency Converter
+          </CardTitle>
+          <CardDescription>
+            Convert between currencies (rates are approximate)
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-12">
+          <div className="text-center space-y-2">
+            <Loader2 className="h-6 w-6 animate-spin mx-auto text-primary" />
+            <p className="text-sm text-muted-foreground">
+              Loading exchange rates...
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -40,7 +86,9 @@ export function CurrencyConverter({ fromCurrency, toCurrency }: CurrencyConverte
           <ArrowRightLeft className="h-5 w-5 text-primary" />
           Currency Converter
         </CardTitle>
-        <CardDescription>Convert between currencies (rates are approximate)</CardDescription>
+        <CardDescription>
+          Convert between currencies (rates are approximate)
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-end">
@@ -96,9 +144,10 @@ export function CurrencyConverter({ fromCurrency, toCurrency }: CurrencyConverte
         </div>
 
         <div className="text-xs text-muted-foreground text-center pt-2 border-t">
-          Exchange rates are approximate and for reference only. Check current rates before exchanging money.
+          Exchange rates are approximate and for reference only. Check current
+          rates before exchanging money.
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
